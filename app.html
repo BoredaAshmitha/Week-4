@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Professional Portfolio — Portfolio, To‑Do, Products</title>
+  <meta name="description" content="Responsive portfolio site with Projects, To-Do (localStorage) and Product Listing with filter & sort." />
+  <style>
+    /* ========== Reset & Base ========== */
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#94a3b8; --accent:#06b6d4; --glass: rgba(255,255,255,0.04);
+      --radius:14px; --container-width:1100px;
+      --max-width:1100px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#071021);color:#e6eef6}
+    a{color:var(--accent);text-decoration:none}
+    img{max-width:100%;height:auto;display:block}
+
+    /* ========== Layout ========== */
+    .wrap{max-width:var(--container-width);margin:28px auto;padding:18px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700}
+    nav{display:flex;gap:12px;flex-wrap:wrap}
+    nav a{padding:8px 12px;border-radius:10px;font-weight:600}
+
+    /* ========== Hero ========== */
+    .hero{display:grid;grid-template-columns:1fr 360px;gap:22px;align-items:center;margin-top:22px}
+    .intro{background:var(--card);padding:22px;border-radius:var(--radius);box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+    .intro h1{margin:0 0 6px;font-size:clamp(20px,3vw,30px)}
+    .intro p{color:var(--muted);line-height:1.5}
+    .meta{display:flex;gap:8px;margin-top:12px}
+    .btn{background:linear-gradient(90deg,var(--accent),#8b5cf6);border:none;color:#021025;padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}
+
+    /* ========== Grid ========== */
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{background:var(--glass);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    .projects .card{display:flex;flex-direction:column;gap:8px}
+
+    /* ========== To-Do & Products Layout ========== */
+    .tools{display:grid;grid-template-columns:1fr 420px;gap:18px;margin-top:18px}
+    .todo{padding:14px}
+    .todo input{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+    .todo-list{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+    .todo-item{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:8px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)}
+
+    /* Products */
+    .product-controls{display:flex;flex-direction:column;gap:8px}
+    .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    .product{padding:10px;border-radius:10px;background:var(--card)}
+    .price{font-weight:800}
+
+    /* Contact */
+    .contact{margin-top:22px;padding:18px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)}
+    .contact input, .contact textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+
+    /* Footer */
+    footer{margin-top:28px;padding:18px;text-align:center;color:var(--muted)}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr}
+      .tools{grid-template-columns:1fr}
+      .product-grid{grid-template-columns:repeat(1,1fr)}
+      .grid-3{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:560px){
+      header{flex-direction:column;align-items:flex-start}
+      .grid-3{grid-template-columns:1fr}
+    }
+
+    /* Small helpers */
+    .muted{color:var(--muted)}
+    .pill{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.03);font-weight:600}
+    .flex{display:flex;gap:10px;align-items:center}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">AV</div>
+        <div>
+          <div style="font-weight:800">Ashmitha Varma - Frontend Developer</div>
+          <div class="muted" style="font-size:13px">Full‑stack • UI • Performance</div>
+        </div>
+      </div>
+      <nav aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#tools">Tools</a>
+        <a href="#products">Products</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero" id="about">
+        <div class="intro">
+          <h1>Hi — I'm Ashmitha. I design fast, accessible web apps.</h1>
+          <p>I build full‑stack applications focused on performance, accessibility and delightful UI. Below is a compact professional portfolio with a live To‑Do (localStorage) and a Product Listing you can reuse.</p>
+          <div class="meta">
+            <span class="pill">React-friendly</span>
+            <span class="pill">Vanilla JS</span>
+            <span class="pill">Responsive</span>
+          </div>
+          <div style="margin-top:12px" class="flex">
+            <a class="btn" href="#projects">View Projects</a>
+            <a class="muted" href="#contact">Download Resume</a>
+          </div>
+        </div>
+        <aside class="card">
+          <h3 style="margin:6px 0">Quick Stats</h3>
+          <div class="muted">Experience</div>
+          <div style="font-weight:800;font-size:18px">3+ years</div>
+          <div class="muted" style="margin-top:10px">Tools</div>
+          <div class="flex" style="margin-top:8px">
+            <div class="pill">HTML</div>
+            <div class="pill">CSS</div>
+            <div class="pill">JS</div>
+          </div>
+        </aside>
+      </section>
+
+      <!-- PROJECTS -->
+      <section id="projects" class="projects" style="margin-top:18px">
+        <h2 style="margin:6px 0">Selected Projects</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h4>Portfolio Website</h4>
+            <p class="muted">Multi-page responsive site with contact and blog sections. Built for performance & SEO.</p>
+            <div style="margin-top:auto;padding-top:6px" class="flex">
+              <span class="pill">HTML</span><span class="pill">CSS</span><span class="pill">JS</span>
+            </div>
+          </div>
+          <div class="card">
+            <h4>Task Manager</h4>
+            <p class="muted">Lightweight to‑do using localStorage with sync and offline support.</p>
+            <div class="flex" style="margin-top:auto;padding-top:6px"><span class="pill">localStorage</span></div>
+          </div>
+          <div class="card">
+            <h4>Marketplace</h4>
+            <p class="muted">Product listing with filters, sorting and pagination-ready data layer.</p>
+            <div class="flex" style="margin-top:auto;padding-top:6px"><span class="pill">UX</span><span class="pill">Perf</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TOOLS: To-Do + Products -->
+      <section id="tools" style="margin-top:18px">
+        <h2>Tools</h2>
+        <div class="tools">
+          <!-- To-Do -->
+          <div class="card todo" aria-labelledby="todo-heading">
+            <h3 id="todo-heading">To‑Do List <small class="muted">(saved in localStorage)</small></h3>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <input id="todo-input" placeholder="Add a new task and press Enter" aria-label="New task" />
+              <button id="todo-add" class="btn">Add</button>
+            </div>
+            <div class="todo-list" id="todo-list" aria-live="polite"></div>
+            <div style="margin-top:8px;display:flex;gap:8px">
+              <button id="todo-clear" class="pill">Clear Completed</button>
+              <button id="todo-reset" class="pill">Reset All</button>
+            </div>
+          </div>
+
+          <!-- Product Listing -->
+          <div class="card" aria-labelledby="products-heading">
+            <h3 id="products-heading">Product Listing</h3>
+            <div class="product-controls">
+              <input id="product-search" placeholder="Search products..." aria-label="search products" />
+              <div style="display:flex;gap:8px;align-items:center">
+                <label class="muted">Category</label>
+                <select id="filter-category">
+                  <option value="all">All</option>
+                </select>
+                <label class="muted">Sort</label>
+                <select id="sort-by">
+                  <option value="popular">Popular</option>
+                  <option value="price-asc">Price: Low → High</option>
+                  <option value="price-desc">Price: High → Low</option>
+                  <option value="rating-desc">Rating</option>
+                </select>
+              </div>
+            </div>
+            <div class="product-grid" id="product-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUCTS (expanded area) -->
+      <section id="products" style="margin-top:18px">
+        <h2>All Products</h2>
+        <div class="card">
+          <p class="muted">This section demonstrates how to filter and sort product data. The controls above affect these results.</p>
+          <div id="products-expanded" style="margin-top:12px"></div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact" class="contact">
+        <h2>Contact</h2>
+        <form id="contact-form">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <input id="name" placeholder="Your name" required />
+            <input id="email" type="email" placeholder="Email" required />
+          </div>
+          <div style="margin-top:8px">
+            <textarea id="message" placeholder="Brief message" rows="4" required></textarea>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button type="submit" class="btn">Send</button>
+            <button type="button" id="contact-clear" class="pill">Clear</button>
+          </div>
+        </form>
+      </section>
+
+      <footer>
+        Built with ❤️ — Save this single HTML file and open locally. Works offline for To‑Do & Products.
+      </footer>
+
+    </main>
+  </div>
+
+  <script>
+    // ---------- Utilities ----------
+    const $ = (sel, ctx=document) => ctx.querySelector(sel)
+    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel))
+
+    // ---------- To-Do: localStorage-backed ----------
+    const TODO_KEY = 'pf_todo_v1'
+    const todoInput = $('#todo-input')
+    const todoAdd = $('#todo-add')
+    const todoListEl = $('#todo-list')
+    const todoClear = $('#todo-clear')
+    const todoReset = $('#todo-reset')
+
+    function loadTodos(){
+      try{
+        const raw = localStorage.getItem(TODO_KEY)
+        return raw ? JSON.parse(raw) : []
+      }catch(e){console.warn('todo load',e);return[]}
+    }
+    function saveTodos(list){ localStorage.setItem(TODO_KEY, JSON.stringify(list)) }
+
+    function renderTodos(){
+      const list = loadTodos()
+      todoListEl.innerHTML = ''
+      if(!list.length){ todoListEl.innerHTML = '<div class="muted">No tasks yet — add something!</div>'; return }
+      list.forEach((t, idx) => {
+        const el = document.createElement('div')
+        el.className='todo-item'
+        el.innerHTML = `
+          <label style="flex:1;display:flex;gap:10px;align-items:center">
+            <input type="checkbox" ${t.done? 'checked':''} data-idx="${idx}" aria-label="mark done">
+            <span style="text-decoration:${t.done? 'line-through':''}">${escapeHtml(t.text)}</span>
+          </label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="pill" data-action="del" data-idx="${idx}">Delete</button>
+          </div>
+        `
+        todoListEl.appendChild(el)
+      })
+    }
+
+    function addTodo(text){
+      const list = loadTodos()
+      list.unshift({text, done:false, id:Date.now()})
+      saveTodos(list)
+      renderTodos()
+    }
+
+    function escapeHtml(s){ return String(s).replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\\':'\\\\','"':'&quot;'})[c]) }
+
+    todoAdd.addEventListener('click', ()=>{const v = todoInput.value.trim(); if(!v) return; addTodo(v); todoInput.value='';})
+    todoInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); todoAdd.click() } })
+
+    todoListEl.addEventListener('click', e=>{
+      const idx = e.target.closest('[data-idx]')?.dataset?.idx
+      if(!idx && idx!=='0') return
+      const list = loadTodos()
+      if(e.target.closest('[data-action="del"]')){
+        list.splice(idx,1); saveTodos(list); renderTodos(); return
+      }
+      if(e.target.type==='checkbox'){
+        list[idx].done = e.target.checked; saveTodos(list); renderTodos(); return
+      }
+    })
+
+    todoClear.addEventListener('click', ()=>{
+      const list = loadTodos().filter(t => !t.done); saveTodos(list); renderTodos();
+    })
+    todoReset.addEventListener('click', ()=>{ if(confirm('Reset all tasks?')){ localStorage.removeItem(TODO_KEY); renderTodos(); } })
+
+    // initialize
+    renderTodos()
+
+    // ---------- Products: sample data, filter & sort ----------
+    const sample = [
+      {id:1,name:'Aurora Headphones',category:'Electronics',price:59.99,rating:4.5,desc:'Lightweight over-ear headphones'},
+      {id:2,name:'Nimbus Backpack',category:'Accessories',price:39.99,rating:4.1,desc:'Water-resistant commuter bag'},
+      {id:3,name:'Solstice Lamp',category:'Home',price:24.5,rating:4.7,desc:'Minimal bedside lamp with dimmer'},
+      {id:4,name:'Circuit Board Kit',category:'Electronics',price:18.0,rating:4.3,desc:'STEM kit for beginners'},
+      {id:5,name:'Breeze Sneakers',category:'Footwear',price:72.0,rating:4.6,desc:'Comfort-first running shoes'},
+      {id:6,name:'Canvas Wallet',category:'Accessories',price:14.99,rating:3.9,desc:'Slim bi-fold wallet'}
+    ]
+
+    const productGrid = $('#product-grid')
+    const productsExpanded = $('#products-expanded')
+    const filterCategory = $('#filter-category')
+    const sortBy = $('#sort-by')
+    const productSearch = $('#product-search')
+
+    // populate categories
+    function populateCategories(){
+      const cats = Array.from(new Set(sample.map(s=>s.category)))
+      cats.forEach(c => { const opt = document.createElement('option'); opt.value=c; opt.textContent=c; filterCategory.appendChild(opt) })
+    }
+
+    function renderProducts(list){
+      productGrid.innerHTML = ''
+      productsExpanded.innerHTML = ''
+      if(!list.length){ productGrid.innerHTML = '<div class="muted">No products match.</div>'; return }
+      list.forEach(p=>{
+        const card = document.createElement('div'); card.className='product'
+        card.innerHTML = `
+          <div style="display:flex;gap:10px;align-items:center">
+            <div style="width:64px;height:64px;border-radius:8px;background:linear-gradient(135deg,rgba(255,255,255,0.03),transparent);display:flex;align-items:center;justify-content:center">Img</div>
+            <div style="flex:1">
+              <div style="font-weight:700">${escapeHtml(p.name)}</div>
+              <div class="muted" style="font-size:13px">${escapeHtml(p.desc)}</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:8px">
+            <div class="muted">${escapeHtml(p.category)}</div>
+            <div class="price">₹${(p.price).toFixed(2)}</div>
+          </div>
+        `
+        productGrid.appendChild(card)
+
+        // expanded list item
+        const row = document.createElement('div'); row.style.padding='8px'; row.style.borderBottom='1px solid rgba(255,255,255,0.03)';
+        row.innerHTML = `<strong>${escapeHtml(p.name)}</strong> — ${escapeHtml(p.desc)} <span class="muted">(${escapeHtml(p.category)})</span> <span style="float:right" class="price">₹${p.price.toFixed(2)}</span>`
+        productsExpanded.appendChild(row)
+      })
+    }
+
+    function applyProductFilters(){
+      const q = productSearch.value.trim().toLowerCase()
+      const cat = filterCategory.value
+      let res = sample.slice()
+      if(cat!=='all') res = res.filter(r => r.category === cat)
+      if(q) res = res.filter(r => (r.name + ' ' + r.desc + ' ' + r.category).toLowerCase().includes(q))
+      const s = sortBy.value
+      if(s==='price-asc') res.sort((a,b)=>a.price-b.price)
+      else if(s==='price-desc') res.sort((a,b)=>b.price-a.price)
+      else if(s==='rating-desc') res.sort((a,b)=>b.rating-b.rating)
+      // popular uses rating then price
+      else if(s==='popular') res.sort((a,b)=>b.rating - a.rating || a.price - b.price)
+      renderProducts(res)
+    }
+
+    filterCategory.addEventListener('change', applyProductFilters)
+    sortBy.addEventListener('change', applyProductFilters)
+    productSearch.addEventListener('input', applyProductFilters)
+
+    populateCategories(); applyProductFilters();
+
+    // ---------- Contact form (mock) ----------
+    const contactForm = $('#contact-form')
+    contactForm.addEventListener('submit', e=>{
+      e.preventDefault();
+      const name = $('#name').value.trim();
+      const email = $('#email').value.trim();
+      const msg = $('#message').value.trim();
+      if(!name||!email||!msg) return alert('Please fill all fields')
+      // In a real app send to API — here we just show a success toast
+      alert('Thanks, ' + name + '! Your message was queued (mock).')
+      contactForm.reset()
+    })
+    $('#contact-clear').addEventListener('click', ()=> contactForm.reset())
+
+    // ---------- Small accessibility: focus outline for keyboard users ----------
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Tab') document.documentElement.style.setProperty('--focus-outline','2px solid #8ee') })
+
+    // End of script
+  </script>
+</body>
+</html>
